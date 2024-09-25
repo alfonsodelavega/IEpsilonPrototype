@@ -31,3 +31,33 @@ If (and only if) IEpsilon detects no usage of the println() function, it automat
 IEpsilon is a fully-functional EOL kernel, maintaining the state of variables and defined operations across cell executions as is the standard.
 
 ![IEpsilon supports all of EOL](https://user-images.githubusercontent.com/48567303/221294505-554ea352-1447-45ce-b773-70f0684301b0.gif)
+
+## How to test the kernel locally
+
+1. Clone the repository and run `mvn package`. This generates a shaded jar with all the required dependencies.
+2. Create a new kernel in your python installation, which must include `jupyter` (e.g. Anaconda does this):
+
+```bash
+python -m ipykernel install --user --name=epsilon --display-name "epsilon"
+```
+
+3. The previous step would create a default notebook in a concrete directory in your system. That directory has a `kernel.json` configuration file whose contents you have to change with these ones (notice that you have to update the `path` to the shaded jar with the one in your system, by indicating where the sources of this repo are present):
+
+```json
+{
+    "argv": [
+        "java",
+        "-jar",
+        "<path-to-this-repository-sources>/target/IEpsilonPrototype-1.0-SNAPSHOT.jar",
+        "{connection_file}"
+    ],
+    "display_name": "Epsilon",
+    "env": {},
+    "interrupt_mode": "message",
+    "language": "eol"
+}
+```
+
+4. You can check that there is a new `epsilon` kernel available in your system by running `jupyter kernelspec list`
+
+5. Now, in any folder, run `jupyter notebook` to start a jupyter server, where you will be able to create new notebooks, and select the `epsilon` kernel for interpreting the cells content.
